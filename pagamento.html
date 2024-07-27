@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lojinha Novo SJC - Pagamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #333; /* Cinza Escuro */
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+        }
+        .header ul {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .header li {
+            padding: 10px;
+            color: #fff; /* Branco */
+        }
+        .header li.active {
+            font-weight: bold;
+            color: #f77f00; /* Laranja */
+        }
+        .payment-info {
+            margin-top: 20px;
+        }
+        .payment-info p {
+            margin: 10px 0;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .copy-button {
+            padding: 10px;
+            background-color: #003566; /* Azul Marinho */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .copy-button:hover {
+            background-color: #002a4e; /* Azul Marinho mais escuro */
+        }
+        .whatsapp-button {
+            padding: 10px 20px;
+            background-color: #f77f00; /* Laranja */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .whatsapp-button:hover {
+            background-color: #cc6600; /* Laranja mais escuro */
+        }
+        .back-button {
+            padding: 10px;
+            background-color: #003566; /* Azul Marinho */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .back-button:hover {
+            background-color: #002a4e; /* Azul Marinho mais escuro */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <ul>
+                <li>1 Carrinho</li>
+                <li>2 Identificação</li>
+                <li class="active">3 Pagamento</li>
+            </ul>
+        </div>
+        <div class="payment-info">
+            <p>Email para pagamento pelo Nubank: <strong>kayquebraga353@gmail.com</strong></p>
+            <p>CPF para pagamento pelo Banco XP: <strong>459.837.068-88</strong></p>
+            <button class="copy-button" onclick="copiarTexto('kayquebraga353@gmail.com')">Copiar E-mail Nubank</button>
+            <button class="copy-button" onclick="copiarTexto('459.837.068-88')">Copiar CPF Banco XP</button>
+            <p>Total: R$ <strong id="total-valor"></strong></p>
+        </div>
+        <button class="whatsapp-button" onclick="finalizarCompra()">Finalizar Compra via WhatsApp</button>
+        <button class="back-button" onclick="window.location.href='identificacao.html'">Voltar para Identificação</button>
+    </div>
+
+    <script>
+        function copiarTexto(texto) {
+            const input = document.createElement('input');
+            input.setAttribute('value', texto);
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            alert('Informação copiada!');
+        }
+
+        function finalizarCompra() {
+            const nome = localStorage.getItem('nome');
+            const email = localStorage.getItem('email');
+            const telefone = localStorage.getItem('telefone');
+            const address = localStorage.getItem('address');
+            const cep = localStorage.getItem('cep');
+            const frete = localStorage.getItem('frete');
+            const total = localStorage.getItem('total');
+
+            const mensagem = `Olá! Gostaria de confirmar minha compra.\n\n- Nome: ${nome}\n- E-mail: ${email}\n- Telefone: ${telefone}\n- Endereço: ${address}\n- CEP: ${cep}\n- Frete: R$ ${frete}\n- Total: R$ ${total}`;
+
+            const numeroWhatsApp = '5512981379708';
+            const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+
+            window.location.href = url;
+        }
+
+        // Calcular e exibir o valor total do localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const total = parseFloat(localStorage.getItem('total')) || 0;
+            document.getElementById('total-valor').textContent = total.toFixed(2);
+        });
+    </script>
+</body>
+</html>

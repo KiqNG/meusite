@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lojinha Novo SJC - Identificação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #333; /* Cinza Escuro */
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+        }
+        .header ul {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .header li {
+            padding: 10px;
+            color: #fff; /* Branco */
+        }
+        .header li.active {
+            font-weight: bold;
+            color: #f77f00; /* Laranja */
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .button-group button {
+            padding: 10px 20px;
+            background-color: #003566; /* Azul Marinho */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button-group button:hover {
+            background-color: #002a4e; /* Azul Marinho mais escuro */
+        }
+        .button-group .next-button {
+            background-color: #f77f00; /* Laranja */
+        }
+        .button-group .next-button:hover {
+            background-color: #cc6600; /* Laranja mais escuro */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <ul>
+                <li>1 Carrinho</li>
+                <li class="active">2 Identificação</li>
+                <li>3 Pagamento</li>
+            </ul>
+        </div>
+        <form id="identificacaoForm">
+            <div class="form-group">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone:</label>
+                <input type="tel" id="telefone" name="telefone" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Endereço:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+                <label for="cep">CEP:</label>
+                <input type="text" id="cep" name="cep" required>
+            </div>
+            <div class="form-group">
+                <label for="frete">Frete:</label>
+                <input type="text" id="frete" name="frete" readonly>
+            </div>
+            <div class="form-group">
+                <label for="total">Total:</label>
+                <input type="text" id="total" name="total" readonly>
+            </div>
+            <div class="button-group">
+                <button type="button" onclick="window.location.href='index.html'">Voltar ao Carrinho</button>
+                <button type="submit" class="next-button">Prosseguir para Pagamento</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalItens = parseFloat(localStorage.getItem('totalItens')) || 0;
+            const frete = parseFloat(localStorage.getItem('frete')) || 5.00;
+            const totalComFrete = (totalItens + frete).toFixed(2);
+
+            document.getElementById('total').value = totalComFrete;
+            document.getElementById('frete').value = frete.toFixed(2);
+        });
+
+        document.getElementById('identificacaoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const telefone = document.getElementById('telefone').value;
+            const address = document.getElementById('address').value;
+            const cep = document.getElementById('cep').value;
+            const frete = document.getElementById('frete').value;
+            const total = document.getElementById('total').value;
+
+            localStorage.setItem('nome', nome);
+            localStorage.setItem('email', email);
+            localStorage.setItem('telefone', telefone);
+            localStorage.setItem('address', address);
+            localStorage.setItem('cep', cep);
+            localStorage.setItem('frete', frete);
+            localStorage.setItem('total', total);
+
+            window.location.href = 'pagamento.html';
+        });
+    </script>
+</body>
+</html>

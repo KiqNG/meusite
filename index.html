@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lojinha Novo SJC - Carrinho</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #333; /* Cinza Escuro */
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+        }
+        .steps {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .steps li {
+            padding: 10px;
+            color: #fff; /* Branco */
+        }
+        .steps li.active {
+            font-weight: bold;
+            color: #f77f00; /* Laranja */
+        }
+        .cart-item {
+            display: flex;
+            flex-direction: column;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item .details {
+            margin-bottom: 10px;
+        }
+        .cart-item .details label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .cart-item .details select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .cart-item .details .color-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .color-option.laranja {
+            background-color: #f77f00; /* Laranja */
+        }
+        .color-option.azul-marinho {
+            background-color: #003566; /* Azul Marinho */
+        }
+        .cart-item .actions {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .cart-item .actions .price {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .cart-item .actions button {
+            padding: 10px 20px;
+            background-color: #f77f00; /* Laranja */
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+        .cart-item .actions button:hover {
+            background-color: #cc6600; /* Laranja mais escuro */
+        }
+        .cart-summary {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .cart-summary .remove-all-button,
+        .cart-summary .proceed-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .cart-summary .remove-all-button {
+            background-color: #003566; /* Azul Marinho */
+        }
+        .cart-summary .remove-all-button:hover {
+            background-color: #002a4e; /* Azul Marinho mais escuro */
+        }
+        .cart-summary .proceed-button {
+            background-color: #003566; /* Azul Marinho */
+        }
+        .cart-summary .proceed-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .cart-summary .proceed-button:hover {
+            background-color: #002a4e; /* Azul Marinho mais escuro */
+        }
+        .cart-list {
+            margin-top: 20px;
+        }
+        .cart-list .cart-item {
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f4f4f4;
+        }
+        .cart-list .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-list .cart-item .details {
+            margin: 0;
+            text-align: left;
+            flex: 1;
+        }
+        .cart-list .cart-item .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .remove-button {
+            background-color: #003566; /* Azul Marinho */
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .remove-button:hover {
+            background-color: #002a4e; /* Azul Marinho mais escuro */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <ul class="steps">
+                <li class="active">1 Carrinho</li>
+                <li>2 Identificação</li>
+                <li>3 Pagamento</li>
+            </ul>
+        </div>
+        <div class="cart-item">
+            <div class="details">
+                <label for="color">Cor:</label>
+                <div class="color-options">
+                    <div class="color-option laranja" onclick="selectColor('laranja')"></div>
+                    <div class="color-option azul-marinho" onclick="selectColor('azul-marinho')"></div>
+                </div>
+                <label for="size">Tamanho:</label>
+                <select id="size">
+                    <option value="P">P</option>
+                    <option value="M">M</option>
+                    <option value="G">G</option>
+                    <option value="GG">GG</option>
+                </select>
+                <label for="quantity">Quantidade:</label>
+                <select id="quantity">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="actions">
+                <div class="price">R$35,00</div>
+                <button id="add-to-cart-button">Adicionar ao Carrinho</button>
+            </div>
+        </div>
+        <div class="cart-list" id="cart-list">
+            <!-- Itens do carrinho serão exibidos aqui -->
+        </div>
+        <div class="cart-summary">
+            <button class="remove-all-button" id="remove-all-button" onclick="removeAll()">Remover Todos</button>
+            <button class="proceed-button" id="proceed-button" disabled onclick="proceedToNextStep()">Prosseguir</button>
+        </div>
+        <div class="cart-summary">
+            <div class="total-price">
+                <strong>Total:</strong> R$<span id="total-price">0,00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedColor = 'laranja'; // Define a cor padrão
+        const itemPrice = 35.00; // Preço fixo da camiseta
+        const frete = 5.00; // Valor do frete
+        localStorage.setItem('frete', frete.toFixed(2));
+
+        function selectColor(color) {
+            selectedColor = color;
+            // Atualiza a borda para mostrar qual cor está selecionada
+            document.querySelectorAll('.color-option').forEach(el => {
+                el.style.border = el.classList.contains(color) ? '2px solid #000' : '2px solid transparent';
+            });
+        }
+
+        document.getElementById('add-to-cart-button').addEventListener('click', function() {
+            const size = document.getElementById('size').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            if (!size || quantity <= 0) {
+                alert('Por favor, selecione tamanho e quantidade.');
+                return;
+            }
+
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const existingItemIndex = cartItems.findIndex(item => item.color === selectedColor && item.size === size);
+
+            if (existingItemIndex !== -1) {
+                cartItems[existingItemIndex].quantity += quantity;
+            } else {
+                cartItems.push({
+                    color: selectedColor,
+                    size: size,
+                    quantity: quantity
+                });
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            updateCartList();
+        });
+
+        function updateCartList() {
+            const cartList = document.getElementById('cart-list');
+            const totalPriceElement = document.getElementById('total-price');
+            cartList.innerHTML = ''; // Limpar a lista existente
+
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            let totalPrice = 0;
+
+            cartItems.forEach((item, index) => {
+                const itemTotalPrice = item.quantity * itemPrice;
+                totalPrice += itemTotalPrice;
+
+                const cartItemDiv = document.createElement('div');
+                cartItemDiv.classList.add('cart-item');
+                cartItemDiv.innerHTML = `
+                    <div class="details">
+                        <p><strong>Cor:</strong> ${item.color}</p>
+                        <p><strong>Tamanho:</strong> ${item.size}</p>
+                        <p><strong>Quantidade:</strong> ${item.quantity}</p>
+                        <p><strong>Subtotal:</strong> R$${itemTotalPrice.toFixed(2)}</p>
+                    </div>
+                    <div class="actions">
+                        <button class="remove-button" onclick="removeItem(${index})">Remover</button>
+                    </div>
+                `;
+                cartList.appendChild(cartItemDiv);
+            });
+
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+            localStorage.setItem('totalItens', totalPrice.toFixed(2)); // Armazenar o total da compra
+            updateProceedButton();
+        }
+
+        function removeItem(index) {
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            cartItems.splice(index, 1);
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            updateCartList();
+        }
+
+        function removeAll() {
+            localStorage.removeItem('cartItems');
+            updateCartList();
+        }
+
+        function updateProceedButton() {
+            const totalPrice = parseFloat(localStorage.getItem('totalItens')) || 0;
+            document.getElementById('proceed-button').disabled = totalPrice <= 0;
+        }
+
+        function proceedToNextStep() {
+            window.location.href = 'identificacao.html';
+        }
+
+        // Atualiza a lista do carrinho quando a página é carregada
+        document.addEventListener('DOMContentLoaded', updateCartList);
+    </script>
+</body>
+</html>
