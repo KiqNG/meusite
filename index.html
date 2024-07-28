@@ -21,7 +21,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background-color: #333; /* Cinza Escuro */
+            background-color: #333;
             color: #fff;
             padding: 15px;
             border-radius: 10px 10px 0 0;
@@ -35,11 +35,11 @@
         }
         .steps li {
             padding: 10px;
-            color: #fff; /* Branco */
+            color: #fff;
         }
         .steps li.active {
             font-weight: bold;
-            color: #f77f00; /* Laranja */
+            color: #f77f00;
         }
         .cart-item {
             display: flex;
@@ -78,24 +78,18 @@
             border: 2px solid transparent;
         }
         .color-option.laranja {
-            background-color: #f77f00; /* Laranja */
+            background-color: #f77f00;
         }
         .color-option.azul-marinho {
-            background-color: #003566; /* Azul Marinho */
+            background-color: #003566;
         }
         .cart-item .actions {
             text-align: center;
             margin-top: 10px;
         }
-        .cart-item .actions .price {
-            color: green;
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: block;
-        }
         .cart-item .actions button {
             padding: 10px 20px;
-            background-color: #f77f00; /* Laranja */
+            background-color: #f77f00;
             color: #fff;
             border: none;
             cursor: pointer;
@@ -105,7 +99,7 @@
             margin: 0 auto;
         }
         .cart-item .actions button:hover {
-            background-color: #cc6600; /* Laranja mais escuro */
+            background-color: #cc6600;
         }
         .cart-summary {
             display: flex;
@@ -125,20 +119,20 @@
             cursor: pointer;
         }
         .cart-summary .remove-all-button {
-            background-color: #003566; /* Azul Marinho */
+            background-color: #003566;
         }
         .cart-summary .remove-all-button:hover {
-            background-color: #002a4e; /* Azul Marinho mais escuro */
+            background-color: #002a4e;
         }
         .cart-summary .proceed-button {
-            background-color: #003566; /* Azul Marinho */
+            background-color: #003566;
         }
         .cart-summary .proceed-button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
         .cart-summary .proceed-button:hover {
-            background-color: #002a4e; /* Azul Marinho mais escuro */
+            background-color: #002a4e;
         }
         .cart-list {
             margin-top: 20px;
@@ -166,7 +160,7 @@
             gap: 10px;
         }
         .remove-button {
-            background-color: #003566; /* Azul Marinho */
+            background-color: #003566;
             color: #fff;
             border: none;
             cursor: pointer;
@@ -175,7 +169,30 @@
             font-size: 14px;
         }
         .remove-button:hover {
-            background-color: #002a4e; /* Azul Marinho mais escuro */
+            background-color: #002a4e;
+        }
+        .product-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+        }
+        .total-price-container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            color: #333;
+            border-radius: 4px;
+            font-size: 1em;
+            margin-top: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        .total-price-container .subtotal,
+        .total-price-container .frete,
+        .total-price-container .total {
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -188,6 +205,7 @@
                 <li>3 Pagamento</li>
             </ul>
         </div>
+        <img id="product-image" class="product-image" src="camisetalaranja.png" alt="Camiseta Laranja">
         <div class="cart-item">
             <div class="details">
                 <label for="color">Cor:</label>
@@ -217,7 +235,6 @@
                 </select>
             </div>
             <div class="actions">
-                <div class="price">R$35,00</div>
                 <button id="add-to-cart-button">Adicionar ao Carrinho</button>
             </div>
         </div>
@@ -228,109 +245,153 @@
             <button class="remove-all-button" id="remove-all-button" onclick="removeAll()">Remover Todos</button>
             <button class="proceed-button" id="proceed-button" disabled onclick="proceedToNextStep()">Prosseguir</button>
         </div>
-        <div class="cart-summary">
-            <div class="total-price">
-                <strong>Total:</strong> R$<span id="total-price">0,00</span>
-            </div>
+        <div class="total-price-container">
+            <div class="subtotal">Subtotal: R$<span id="subtotal-price">0,00</span></div>
+            <div class="frete">Frete: R$10,00</div>
+            <div class="total">Total: R$<span id="total-price">10,00</span></div>
         </div>
     </div>
-
     <script>
-        let selectedColor = 'laranja'; // Define a cor padrão
-        const itemPrice = 35.00; // Preço fixo da camiseta
-        const frete = 5.00; // Valor do frete
-        localStorage.setItem('frete', frete.toFixed(2));
+        const itemPrice = 35;
+        const frete = 10;
+        let selectedColor = localStorage.getItem('selectedColor') || 'laranja';
 
         function selectColor(color) {
             selectedColor = color;
-            // Atualiza a borda para mostrar qual cor está selecionada
-            document.querySelectorAll('.color-option').forEach(el => {
-                el.style.border = el.classList.contains(color) ? '2px solid #000' : '2px solid transparent';
+            localStorage.setItem('selectedColor', color);
+            const imagePath = color === 'laranja' ? 'camisetalaranja.png' : 'camisetaazul.png';
+            document.getElementById('product-image').src = imagePath;
+
+            // Estiliza a cor selecionada
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.style.border = '2px solid transparent';
             });
+            document.querySelector(`.color-option.${color}`).style.border = '2px solid #333';
         }
 
-        document.getElementById('add-to-cart-button').addEventListener('click', function() {
+        function addToCart() {
             const size = document.getElementById('size').value;
             const quantity = parseInt(document.getElementById('quantity').value);
-
-            if (!size || quantity <= 0) {
-                alert('Por favor, selecione tamanho e quantidade.');
-                return;
-            }
-
-            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-            const existingItemIndex = cartItems.findIndex(item => item.color === selectedColor && item.size === size);
-
-            if (existingItemIndex !== -1) {
-                cartItems[existingItemIndex].quantity += quantity;
-            } else {
-                cartItems.push({
-                    color: selectedColor,
-                    size: size,
-                    quantity: quantity
-                });
-            }
-
-            localStorage.setItem('cartItems', JSON.stringify(cartItems));
-            updateCartList();
-        });
-
-        function updateCartList() {
             const cartList = document.getElementById('cart-list');
-            const totalPriceElement = document.getElementById('total-price');
-            cartList.innerHTML = ''; // Limpar a lista existente
 
-            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-            let totalPrice = 0;
+            // Cria um novo item no carrinho
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-item');
 
-            cartItems.forEach((item, index) => {
-                const itemTotalPrice = item.quantity * itemPrice;
-                totalPrice += itemTotalPrice;
+            cartItem.innerHTML = `
+                <div class="details">
+                    Cor: ${selectedColor}, Tamanho: ${size}, Quantidade: ${quantity}
+                </div>
+                <div class="actions">
+                    <button class="remove-button" onclick="removeCartItem(this, ${quantity})">Remover</button>
+                </div>
+            `;
 
-                const cartItemDiv = document.createElement('div');
-                cartItemDiv.classList.add('cart-item');
-                cartItemDiv.innerHTML = `
-                    <div class="details">
-                        <p><strong>Cor:</strong> ${item.color}</p>
-                        <p><strong>Tamanho:</strong> ${item.size}</p>
-                        <p><strong>Quantidade:</strong> ${item.quantity}</p>
-                        <p><strong>Subtotal:</strong> R$${itemTotalPrice.toFixed(2)}</p>
-                    </div>
-                    <div class="actions">
-                        <button class="remove-button" onclick="removeItem(${index})">Remover</button>
-                    </div>
-                `;
-                cartList.appendChild(cartItemDiv);
-            });
+            cartList.appendChild(cartItem);
 
-            totalPriceElement.textContent = totalPrice.toFixed(2);
-            localStorage.setItem('totalItens', totalPrice.toFixed(2)); // Armazenar o total da compra
-            updateProceedButton();
+            // Salva o item no localStorage
+            saveCartItems();
+
+            updateTotalPrice();
+
+            // Habilita o botão de prosseguir
+            document.getElementById('proceed-button').disabled = false;
+
+            // Limpa o formulário
+            document.getElementById('size').value = 'P';
+            document.getElementById('quantity').value = 1;
         }
 
-        function removeItem(index) {
-            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-            cartItems.splice(index, 1);
-            localStorage.setItem('cartItems', JSON.stringify(cartItems));
-            updateCartList();
+        function removeCartItem(button, quantity) {
+            const cartItem = button.parentElement.parentElement;
+            cartItem.remove();
+            
+            // Salva o item no localStorage
+            saveCartItems();
+
+            updateTotalPrice();
+
+            // Desabilita o botão de prosseguir se não houver mais itens no carrinho
+            const cartList = document.getElementById('cart-list');
+            if (cartList.children.length === 0) {
+                document.getElementById('proceed-button').disabled = true;
+            }
         }
 
         function removeAll() {
-            localStorage.removeItem('cartItems');
-            updateCartList();
+            const cartList = document.getElementById('cart-list');
+            cartList.innerHTML = '';
+            updateTotalPrice();
+            document.getElementById('proceed-button').disabled = true;
+
+            // Salva o item no localStorage
+            saveCartItems();
         }
 
-        function updateProceedButton() {
-            const totalPrice = parseFloat(localStorage.getItem('totalItens')) || 0;
-            document.getElementById('proceed-button').disabled = totalPrice <= 0;
+        function updateTotalPrice() {
+            const cartItems = document.querySelectorAll('.cart-list .cart-item');
+            let subtotalPrice = 0;
+            cartItems.forEach(item => {
+                const details = item.querySelector('.details').textContent;
+                const quantity = parseInt(details.split('Quantidade: ')[1]);
+                subtotalPrice += itemPrice * quantity;
+            });
+
+            const totalPrice = subtotalPrice + frete;
+            document.getElementById('subtotal-price').textContent = subtotalPrice.toFixed(2);
+            document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+
+            // Salva o total no localStorage
+            localStorage.setItem('totalPrice', totalPrice.toFixed(2));
+        }
+
+        function saveCartItems() {
+            const cartItems = document.querySelectorAll('.cart-list .cart-item');
+            const items = [];
+            cartItems.forEach(item => {
+                const details = item.querySelector('.details').textContent;
+                items.push(details);
+            });
+
+            localStorage.setItem('cartItems', JSON.stringify(items));
+        }
+
+        function loadCartItems() {
+            const savedItems = JSON.parse(localStorage.getItem('cartItems'));
+            if (savedItems) {
+                const cartList = document.getElementById('cart-list');
+                savedItems.forEach(details => {
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    cartItem.innerHTML = `
+                        <div class="details">${details}</div>
+                        <div class="actions">
+                            <button class="remove-button" onclick="removeCartItem(this)">Remover</button>
+                        </div>
+                    `;
+                    cartList.appendChild(cartItem);
+                });
+
+                updateTotalPrice();
+                document.getElementById('proceed-button').disabled = savedItems.length === 0;
+            }
+
+            // Carrega a cor selecionada
+            selectColor(selectedColor);
         }
 
         function proceedToNextStep() {
             window.location.href = 'identificacao.html';
         }
 
-        // Atualiza a lista do carrinho quando a página é carregada
-        document.addEventListener('DOMContentLoaded', updateCartList);
+        // Carrega os itens do carrinho ao carregar a página
+        window.onload = loadCartItems;
+
+        // Define a cor padrão ao carregar a página
+        selectColor(selectedColor);
+
+        // Adiciona o evento ao botão "Adicionar ao Carrinho"
+        document.getElementById('add-to-cart-button').addEventListener('click', addToCart);
     </script>
 </body>
 </html>
