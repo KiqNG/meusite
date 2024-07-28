@@ -26,56 +26,68 @@
             padding: 15px;
             border-radius: 10px 10px 0 0;
         }
-        .header ul {
+        .steps {
             display: flex;
             justify-content: space-around;
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        .header li {
+        .steps li {
             padding: 10px;
             color: #fff; /* Branco */
         }
-        .header li.active {
+        .steps li.active {
             font-weight: bold;
             color: #f77f00; /* Laranja */
         }
-        .form-group {
-            margin: 15px 0;
+        form {
+            display: flex;
+            flex-direction: column;
         }
-        .form-group label {
-            display: block;
+        label {
             margin-bottom: 5px;
             font-weight: bold;
         }
-        .form-group input {
-            width: 100%;
+        input {
             padding: 10px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+        input::placeholder {
+            color: #aaa; /* Cor do placeholder */
+            opacity: 0.7; /* Transparência do placeholder */
         }
-        .button-group button {
-            padding: 10px 20px;
+        .button {
+            padding: 15px;
             background-color: #003566; /* Azul Marinho */
             color: #fff;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
+            border-radius: 4px;
             font-size: 16px;
+            text-align: center;
+            margin-top: 10px;
         }
-        .button-group button:hover {
+        .button:hover {
             background-color: #002a4e; /* Azul Marinho mais escuro */
         }
-        .button-group .next-button {
+        .back-button {
+            padding: 15px;
             background-color: #f77f00; /* Laranja */
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 10px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
         }
-        .button-group .next-button:hover {
+        .back-button:hover {
             background-color: #cc6600; /* Laranja mais escuro */
         }
     </style>
@@ -83,78 +95,93 @@
 <body>
     <div class="container">
         <div class="header">
-            <ul>
+            <ul class="steps">
                 <li>1 Carrinho</li>
                 <li class="active">2 Identificação</li>
                 <li>3 Pagamento</li>
             </ul>
         </div>
-        <form id="identificacaoForm">
-            <div class="form-group">
-                <label for="nome">Nome Completo:</label>
-                <input type="text" id="nome" name="nome" required>
-            </div>
-            <div class="form-group">
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="telefone">Telefone:</label>
-                <input type="tel" id="telefone" name="telefone" required>
-            </div>
-            <div class="form-group">
-                <label for="address">Endereço:</label>
-                <input type="text" id="address" name="address" required>
-            </div>
-            <div class="form-group">
-                <label for="cep">CEP:</label>
-                <input type="text" id="cep" name="cep" required>
-            </div>
-            <div class="form-group">
-                <label for="frete">Frete:</label>
-                <input type="text" id="frete" name="frete" readonly>
-            </div>
-            <div class="form-group">
-                <label for="total">Total:</label>
-                <input type="text" id="total" name="total" readonly>
-            </div>
-            <div class="button-group">
-                <button type="button" onclick="window.location.href='index.html'">Voltar ao Carrinho</button>
-                <button type="submit" class="next-button">Prosseguir para Pagamento</button>
-            </div>
+        <form id="identificacao-form" action="pagamento.html" method="post">
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" placeholder="Ex: João da Silva" required>
+            
+            <label for="endereco">Endereço Completo:</label>
+            <input type="text" id="endereco" name="endereco" placeholder="Ex: Rua das Flores, 123" required>
+            
+            <label for="complemento">Complemento:</label>
+            <input type="text" id="complemento" name="complemento" placeholder="Ex: Apto 45">
+            
+            <label for="bairro">Bairro:</label>
+            <input type="text" id="bairro" name="bairro" placeholder="Ex: Centro" required>
+            
+            <label for="cidade">Cidade:</label>
+            <input type="text" id="cidade" name="cidade" value="São José dos Campos" readonly>
+            
+            <label for="estado">Estado:</label>
+            <input type="text" id="estado" name="estado" value="SP" readonly>
+            
+            <label for="cep">CEP:</label>
+            <input type="tel" id="cep" name="cep" placeholder="Ex: 12212-657" required>
+            
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" placeholder="Ex: joao@gmail.com" required>
+            
+            <label for="telefone">Telefone:</label>
+            <input type="tel" id="telefone" name="telefone" placeholder="Ex: (12) 91234-5678" required>
+            
+            <button type="submit" class="button">Prosseguir para Pagamento</button>
         </form>
+        <a href="index.html" class="back-button" id="back-button">Voltar ao Carrinho</a>
     </div>
 
     <script>
+        // Carrega os dados do localStorage se disponíveis
         document.addEventListener('DOMContentLoaded', function() {
-            const totalItens = parseFloat(localStorage.getItem('totalItens')) || 0;
-            const frete = parseFloat(localStorage.getItem('frete')) || 5.00;
-            const totalComFrete = (totalItens + frete).toFixed(2);
-
-            document.getElementById('total').value = totalComFrete;
-            document.getElementById('frete').value = frete.toFixed(2);
+            const identificacao = JSON.parse(localStorage.getItem('identificacao'));
+            if (identificacao) {
+                document.getElementById('nome').value = identificacao.nome || '';
+                document.getElementById('endereco').value = identificacao.endereco || '';
+                document.getElementById('complemento').value = identificacao.complemento || '';
+                document.getElementById('bairro').value = identificacao.bairro || '';
+                document.getElementById('cep').value = identificacao.cep || '';
+                document.getElementById('email').value = identificacao.email || '';
+                document.getElementById('telefone').value = identificacao.telefone || '';
+            }
         });
 
-        document.getElementById('identificacaoForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+        // Função para salvar os dados no localStorage
+        function salvarDados() {
+            const nome = document.getElementById('nome').value.trim();
+            const endereco = document.getElementById('endereco').value.trim();
+            const complemento = document.getElementById('complemento').value.trim();
+            const bairro = document.getElementById('bairro').value.trim();
+            const cidade = document.getElementById('cidade').value.trim();
+            const estado = document.getElementById('estado').value.trim();
+            const cep = document.getElementById('cep').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
 
-            const nome = document.getElementById('nome').value;
-            const email = document.getElementById('email').value;
-            const telefone = document.getElementById('telefone').value;
-            const address = document.getElementById('address').value;
-            const cep = document.getElementById('cep').value;
-            const frete = document.getElementById('frete').value;
-            const total = document.getElementById('total').value;
+            localStorage.setItem('identificacao', JSON.stringify({
+                nome,
+                endereco,
+                complemento,
+                bairro,
+                cidade,
+                estado,
+                cep,
+                email,
+                telefone
+            }));
+        }
 
-            localStorage.setItem('nome', nome);
-            localStorage.setItem('email', email);
-            localStorage.setItem('telefone', telefone);
-            localStorage.setItem('address', address);
-            localStorage.setItem('cep', cep);
-            localStorage.setItem('frete', frete);
-            localStorage.setItem('total', total);
+        // Salva as informações de identificação no localStorage ao clicar em Prosseguir para Pagamento
+        document.getElementById('identificacao-form').addEventListener('submit', function(e) {
+            salvarDados();
+        });
 
-            window.location.href = 'pagamento.html';
+        // Salva as informações de identificação no localStorage ao clicar em Voltar ao Carrinho
+        document.getElementById('back-button').addEventListener('click', function() {
+            salvarDados();
         });
     </script>
 </body>
