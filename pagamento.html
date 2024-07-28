@@ -43,11 +43,20 @@
         }
         .payment-info {
             margin-top: 20px;
+            text-align: center;
         }
         .payment-info p {
             margin: 10px 0;
             font-size: 18px;
             line-height: 1.6;
+        }
+        .total-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: right;
         }
         .copy-button {
             padding: 10px;
@@ -92,6 +101,7 @@
             display: block;
             margin: 20px auto;
             text-align: center;
+            width: 100%;
         }
         .back-button:hover {
             background-color: #002a4e; /* Azul Marinho mais escuro */
@@ -112,7 +122,9 @@
             <p>CPF para pagamento pelo Banco XP: <strong>459.837.068-88</strong></p>
             <button class="copy-button" onclick="copiarTexto('kayquebraga353@gmail.com')">Copiar E-mail Nubank</button>
             <button class="copy-button" onclick="copiarTexto('459.837.068-88')">Copiar CPF Banco XP</button>
-            <p>Total: R$ <strong id="total-valor"></strong></p>
+            <div class="total-container">
+                <p>Total: R$ <strong id="total-valor"></strong></p>
+            </div>
         </div>
         <button class="whatsapp-button" onclick="finalizarCompra()">Finalizar Compra via WhatsApp</button>
         <button class="back-button" onclick="window.location.href='identificacao.html'">Voltar para Identificação</button>
@@ -130,15 +142,9 @@
         }
 
         function finalizarCompra() {
-            const nome = localStorage.getItem('nome');
-            const email = localStorage.getItem('email');
-            const telefone = localStorage.getItem('telefone');
-            const address = localStorage.getItem('address');
-            const cep = localStorage.getItem('cep');
-            const frete = localStorage.getItem('frete');
-            const total = localStorage.getItem('total');
+            const identificacao = JSON.parse(localStorage.getItem('identificacao'));
 
-            const mensagem = `Olá! Gostaria de confirmar minha compra.\n\n- Nome: ${nome}\n- E-mail: ${email}\n- Telefone: ${telefone}\n- Endereço: ${address}\n- CEP: ${cep}\n- Frete: R$ ${frete}\n- Total: R$ ${total}`;
+            const mensagem = `Olá! Gostaria de confirmar minha compra.\n\n- Nome: ${identificacao.nome}\n- E-mail: ${identificacao.email}\n- Telefone: ${identificacao.telefone}\n- Endereço: ${identificacao.endereco}\n- Complemento: ${identificacao.complemento}\n- Bairro: ${identificacao.bairro}\n- Cidade: ${identificacao.cidade}\n- Estado: ${identificacao.estado}\n- CEP: ${identificacao.cep}\n- Frete: R$ ${identificacao.frete}\n- Total: R$ ${identificacao.total}`;
 
             const numeroWhatsApp = '5512981379708';
             const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
@@ -148,8 +154,8 @@
 
         // Calcular e exibir o valor total do localStorage
         document.addEventListener('DOMContentLoaded', function() {
-            const total = parseFloat(localStorage.getItem('total')) || 0;
-            document.getElementById('total-valor').textContent = total.toFixed(2);
+            const total = localStorage.getItem('totalPrice');
+            document.getElementById('total-valor').textContent = total ? total : '0.00';
         });
     </script>
 </body>
